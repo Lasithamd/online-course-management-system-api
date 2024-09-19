@@ -1,12 +1,10 @@
 const express = require('express')
 const router = express.Router()
 
-const {getStudent, saveStudent, updateStudent, deleteStudent,getSingleStudent} =require('../controller/student-controller')
+const {saveVideo, deleteVideo, getVideoByCourse} =require('../controller/video-controller')
 
-router.get('/', getStudent)
-router.get('/:id', getSingleStudent)
-router.post('/', saveStudent)
-router.put('/:id', updateStudent)
-router.delete('/:id', deleteStudent)
+router.get('/:id', getVideoByCourse)
+router.post('/', saveVideo)
+router.delete('/:id', deleteVideo)
 
 module.exports = router
