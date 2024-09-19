@@ -23,4 +23,4 @@ const deleteStudentCourse =(req,res)=>{
     })
 }
 
-module.exports = { getStudent, saveStudent, updateStudent, deleteStudent,getSingleStudent}
+module.exports = { saveStudentCourse,deleteStudentCourse}
