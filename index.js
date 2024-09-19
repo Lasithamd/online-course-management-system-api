@@ -3,13 +3,13 @@ const app = express()
 const port = 3000
 var bodyParser = require('body-parser')
 const studentRouter =require('./routes/student-routes')
-// const itemRouter =require('./routes/course-routes')
+const courseRouter =require('./routes/course-routes')
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/student', studentRouter)
-// app.use('/course', courseRouter)
+app.use('/course', courseRouter)
 
 
 app.listen(port, () => {
