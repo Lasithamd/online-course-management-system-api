@@ -1,0 +1,22 @@
+{
+  "name": "online-course-management-system-api",
+  "version": "1.0.0",
+  "description": "online course management system api",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Lasithamd/online-course-management-system-api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Lasithamd/online-course-management-system-api/issues"
+  },
+  "homepage": "https://github.com/Lasithamd/online-course-management-system-api#readme",
+  "dependencies": {
+    "express": "^4.21.0"
+  }
+}
