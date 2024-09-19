@@ -1,7 +1,5 @@
 const connection  =require('../db/db-connection');
 
-
-
 const getVideoByCourse =(req,res)=>{
    const sql= 'SELECT * FROM video where course_id=?;'
   connection.query(sql,[[req.params.id]], (err, rows,fields) => {
