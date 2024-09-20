@@ -40,3 +40,6 @@ CREATE TABLE student_course (
 );
 
 
+ALTER TABLE users ADD COLUMN name  VARCHAR(20);
+ALTER TABLE users ADD COLUMN email  VARCHAR(30);
+ALTER TABLE users DROP COLUMN username;

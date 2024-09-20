@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Lasithamd/online-course-management-system-api#readme",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "body-parser": "^1.20.3",
     "express": "^4.21.0",
     "fs": "^0.0.1-security",
