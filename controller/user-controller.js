@@ -20,7 +20,10 @@ const register = (req, res) => {
         return res.status(500).json({ error: 'Failed to register user' });
       }
       console.log('User registered successfully');
-      res.status(201).json({ message: 'User registered successfully' });
+      res.status(201).json({ 
+        message: 'User registered successfully' 
+      
+      });
     });
   });
 };
@@ -52,13 +55,18 @@ const login = (req, res) => {
       }
 
       if (isMatch) {
-        const token = jwt.sign(
-          { userId: user.id, email: user.email },
-          JWT_SECRET,
-          { expiresIn: '1h' }
-        );
+        const userResponse = {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+        };
+
+        // Generate a token for the user
+        const token = `${user.id}|${jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '1h' })}`;
+
         console.log('User logged in successfully');
-        res.json({ message: 'Login successful', token });
+        // Respond with the user object and token
+        res.json({ user: userResponse, token });
       } else {
         return res.status(401).json({ error: 'Incorrect password' });
       }
