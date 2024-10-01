@@ -62,7 +62,7 @@ const login = (req, res) => {
         };
 
         // Generate a token for the user
-        const token = `${user.id}|${jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '1h' })}`;
+        const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '5h' });
 
         console.log('User logged in successfully');
         // Respond with the user object and token
