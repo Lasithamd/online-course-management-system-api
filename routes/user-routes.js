@@ -1,10 +1,11 @@
-const express = require('express')
-const router = express.Router()
+const express = require('express');
+const router = express.Router();
+const { register, login } = require('../controller/user-controller');
 
-const {register} =require('../controller/user-controller')
+// Register a new user
+router.post('/register', register);
 
-router.post('/register', register)
-// router.post('/', uploadVideo, saveVideo)
-// router.delete('/:id', deleteVideo)
+// Login and get a JWT token
+router.post('/login', login);  // Use POST for login
 
-module.exports = router
+module.exports = router;

@@ -1,54 +1,69 @@
 const bcrypt = require('bcrypt');
-const connection  =require('../db/db-connection');
-const saltRounds = 10;
+const jwt = require('jsonwebtoken');
+const connection = require('../db/db-connection');
 
-const login =(req,res)=>{
-    connection.query('SELECT * FROM courses', (err, rows,fields) => {
-        if(err) throw err
-        res.json(rows);
-      });     
-}
-
-
+const JWT_SECRET = process.env.JWT_SECRET || 'your_secret_key';
 
 const register = (req, res) => {
-  const {name,email,password} = req.body;
+  const { name, email, password } = req.body;
 
-  // Check if required fields are provided
-  if (!name) {
-    return res.status(400).json({ error: 'Name is required' });
-  }
-  if (!email ) {
-
-    return res.status(400).json({ error: 'email is required' });
-  }
-  if (!password ) {
-    return res.status(400).json({ error: 'Password is required' });
-  }
-
-  // Hash the password using bcrypt
-  bcrypt.hash(password, saltRounds, (err, hashedPassword) => {
+  bcrypt.hash(password, 10, (err, hashedPassword) => {
     if (err) {
       console.error('Error hashing password:', err);
-      return res.status(500).json({ error: 'Failed to hash password' });
+      return res.status(500).json({ error: 'Internal server error' });
     }
 
-    // SQL query to insert the user into the database with hashed password
     const sql = 'INSERT INTO users (name, email, password) VALUES (?, ?, ?)';
-
     connection.query(sql, [name, email, hashedPassword], (err, result) => {
       if (err) {
         console.error('Error registering user:', err);
         return res.status(500).json({ error: 'Failed to register user' });
       }
-
-      console.log('User registration successful!');
-      res.json({
-        message: 'User registered successfully!',
-        userId: result.insertId
-      });
+      console.log('User registered successfully');
+      res.status(201).json({ message: 'User registered successfully' });
     });
   });
 };
 
-module.exports = { register, login}
+const login = (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Email and password are required' });
+  }
+
+  const sql = 'SELECT * FROM users WHERE email = ?';
+  connection.query(sql, [email], (err, results) => {
+    if (err) {
+      console.error('Error fetching user:', err);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const user = results[0];
+
+    bcrypt.compare(password, user.password, (err, isMatch) => {
+      if (err) {
+        console.error('Error comparing passwords:', err);
+        return res.status(500).json({ error: 'Internal server error' });
+      }
+
+      if (isMatch) {
+        const token = jwt.sign(
+          { userId: user.id, email: user.email },
+          JWT_SECRET,
+          { expiresIn: '1h' }
+        );
+        console.log('User logged in successfully');
+        res.json({ message: 'Login successful', token });
+      } else {
+        return res.status(401).json({ error: 'Incorrect password' });
+      }
+    });
+  });
+};
+
+module.exports = { register, login };
