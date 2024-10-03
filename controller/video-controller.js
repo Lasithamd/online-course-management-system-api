@@ -1,8 +1,11 @@
+const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const app = express();
 const connection  =require('../db/db-connection');
 const upload = require('../middlewares/upload');
 
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 const uploadVideo = upload.fields([
   { name: 'thumbnails', maxCount: 1 }, 
   { name: 'video', maxCount: 1 }
@@ -24,9 +27,9 @@ const getVideoByCourse =(req,res)=>{
 }
 const saveVideo = (req, res) => {
   // Extract file paths from req.files
-  const thumbnailsPath = req.files['thumbnails'] ? req.files['thumbnails'][0].path : null;
-  const videoPath = req.files['video'] ? req.files['video'][0].path : null;
-  if (!thumbnailsPath || !videoPath) {
+  const thumbnailsPath = req.files['thumbnails'] ? `/uploads/thumbnails/${req.files['thumbnails'][0].filename}` : null;
+  const videoPath = req.files['video'] ? `/uploads/videos/${req.files['video'][0].filename}` : null;
+   if (!thumbnailsPath || !videoPath) {
     return res.status(400).json({ error: 'Missing video or thumbnail file' });
   }
   const re = {
