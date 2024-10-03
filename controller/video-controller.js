@@ -1,15 +1,15 @@
-const express = require('express');
+
 const fs = require('fs');
 const path = require('path');
-const app = express();
+
 const connection  =require('../db/db-connection');
 const upload = require('../middlewares/upload');
 
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 const uploadVideo = upload.fields([
   { name: 'thumbnails', maxCount: 1 }, 
   { name: 'video', maxCount: 1 }
 ]);
+
 
 const getVideo =(req,res)=>{
   const sql= 'SELECT * FROM video;'
@@ -24,6 +24,13 @@ const getVideoByCourse =(req,res)=>{
       if(err) throw err
       res.json(rows);
     });     
+}
+const getSingleVideo =(req,res)=>{
+  const sql= 'SELECT * FROM video where id=?;'
+ connection.query(sql,[[req.params.id]], (err, rows,fields) => {
+     if(err) throw err
+     res.json(rows);
+   });     
 }
 const saveVideo = (req, res) => {
   // Extract file paths from req.files
@@ -100,4 +107,4 @@ const deleteVideo = (req, res) => {
   });
 };
 
-module.exports = { saveVideo, deleteVideo, getVideoByCourse,uploadVideo,getVideo}
+module.exports = { saveVideo, deleteVideo, getVideoByCourse,uploadVideo,getVideo,getSingleVideo}

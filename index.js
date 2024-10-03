@@ -3,6 +3,8 @@ const app = express()
 const port = 3000
 const cors = require('cors');
 var bodyParser = require('body-parser')
+app.use('/uploads', express.static('uploads'));
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
