@@ -8,6 +8,13 @@ const uploadVideo = upload.fields([
   { name: 'video', maxCount: 1 }
 ]);
 
+const getVideo =(req,res)=>{
+  const sql= 'SELECT * FROM video;'
+ connection.query(sql,[[req.params.id]], (err, rows,fields) => {
+     if(err) throw err
+     res.json(rows);
+   });     
+}
 const getVideoByCourse =(req,res)=>{
    const sql= 'SELECT * FROM video where course_id=?;'
   connection.query(sql,[[req.params.id]], (err, rows,fields) => {
@@ -90,4 +97,4 @@ const deleteVideo = (req, res) => {
   });
 };
 
-module.exports = { saveVideo, deleteVideo, getVideoByCourse,uploadVideo}
+module.exports = { saveVideo, deleteVideo, getVideoByCourse,uploadVideo,getVideo}
