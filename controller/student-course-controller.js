@@ -14,7 +14,20 @@ const saveStudentCourse =(req,res)=>{
       });    
 }
 
+const getStudentCourse = (req, res) => {
+  const sql = `
+    SELECT student_course.student_id, student_course.course_id, courses.name AS course_name , courses.description
+    FROM student_course
+    JOIN courses ON student_course.course_id = courses.id
+    WHERE student_course.student_id = ?;
+  `;
 
+  connection.query(sql, [req.params.id], (err, rows, fields) => {
+    if (err) throw err;
+    console.log('Student course with course name fetched');
+    res.json(rows);
+  });
+};
 
 const deleteStudentCourse =(req,res)=>{
     const sql= 'DELETE FROM student_course WHERE id=?;'
@@ -25,4 +38,4 @@ const deleteStudentCourse =(req,res)=>{
     })
 }
 
-module.exports = { saveStudentCourse,deleteStudentCourse}
+module.exports = { saveStudentCourse,deleteStudentCourse,getStudentCourse}
