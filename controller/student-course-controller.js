@@ -3,8 +3,10 @@ const connection  =require('../db/db-connection');
 
 
 const saveStudentCourse =(req,res)=>{
-    const re = req.body;
-    const sql = 'INSERT INTO student_course (student_id,course_id) VALUES (?, ?)';
+  const re = req.body;
+   
+    
+    const sql = 'INSERT INTO student_course (student_id, course_id) VALUES (?, ?)';
     connection.query(sql, [re.student_id,re.course_id], (err, rows,fields) => {
         if(err) throw err
         console.log('Student Course saved');
