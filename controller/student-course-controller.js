@@ -4,8 +4,7 @@ const connection  =require('../db/db-connection');
 
 const saveStudentCourse =(req,res)=>{
   const re = req.body;
-   
-    
+      
     const sql = 'INSERT INTO student_course (student_id, course_id) VALUES (?, ?)';
     connection.query(sql, [re.student_id,re.course_id], (err, rows,fields) => {
         if(err) throw err
@@ -14,7 +13,13 @@ const saveStudentCourse =(req,res)=>{
       });    
 }
 
-
+const getStudentCourse =(req,res)=>{
+  const sql= 'SELECT courses.* FROM `student_course` LEFT JOIN `courses` ON courses.id = student_course.course_id WHERE student_id=?;'
+ connection.query(sql,[[req.params.id]], (err, rows,fields) => {
+     if(err) throw err
+     res.json(rows);
+   });     
+}
 
 const deleteStudentCourse =(req,res)=>{
     const sql= 'DELETE FROM student_course WHERE id=?;'
@@ -25,4 +30,4 @@ const deleteStudentCourse =(req,res)=>{
     })
 }
 
-module.exports = { saveStudentCourse,deleteStudentCourse}
+module.exports = { saveStudentCourse,deleteStudentCourse,getStudentCourse}
