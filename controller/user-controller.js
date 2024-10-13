@@ -74,4 +74,50 @@ const login = (req, res) => {
   });
 };
 
-module.exports = { register, login };
+const studentLogin = (req, res) => {
+  const { email, app_password } = req.body;
+console.log(app_password);
+
+  if (!email || !app_password) {
+    return res.status(400).json({ error: 'Email and password are required' });
+  }
+
+  const sql = 'SELECT * FROM students WHERE email = ?';
+  connection.query(sql, [email], (err, results) => {
+    if (err) {
+      console.error('Error fetching user:', err);
+      return res.status(500).json({ error: 'Internal server error' });
+    }
+
+    if (results.length === 0) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    const student = results[0];
+
+    bcrypt.compare(app_password, student.app_password, (err, isMatch) => {
+      if (err) {
+        console.error('Error comparing passwords:', err);
+        return res.status(500).json({ error: 'Internal server error' });
+      }
+
+      if (isMatch) {
+        const userResponse = {
+          id: student.id,
+          name: student.name,
+          email: student.email,
+        };
+
+        // Generate a token for the user
+        const token = jwt.sign({ id: student.id }, JWT_SECRET, { expiresIn: '5h' });
+
+        console.log('User logged in successfully');
+        // Respond with the user object and token
+        res.json({ user: userResponse, token });
+      } else {
+        return res.status(401).json({ error: 'Incorrect password' });
+      }
+    });
+  });
+};
+module.exports = { register, login,studentLogin };
