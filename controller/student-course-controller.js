@@ -29,6 +29,16 @@ const getStudentCourse = (req, res) => {
   });
 };
 
+const getNotActiveCourse = (req, res) => {
+  const sql = `SELECT courses.* FROM courses WHERE courses.id NOT IN ( SELECT course_id FROM student_course WHERE student_id = ? );
+  `;
+
+  connection.query(sql, [req.params.id], (err, rows, fields) => {
+    if (err) throw err;
+    console.log('Student course with course name fetched');
+    res.json(rows);
+  });
+};
 const deleteStudentCourse =(req,res)=>{
     const sql= 'DELETE FROM student_course WHERE id=?;'
     connection.query(sql,[req.params.id],(err,rows,fields) => {
@@ -38,4 +48,4 @@ const deleteStudentCourse =(req,res)=>{
     })
 }
 
-module.exports = { saveStudentCourse,deleteStudentCourse,getStudentCourse}
+module.exports = { saveStudentCourse,deleteStudentCourse,getStudentCourse,getNotActiveCourse}
